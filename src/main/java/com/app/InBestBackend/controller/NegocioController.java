@@ -3,6 +3,7 @@ package com.app.InBestBackend.controller;
 import com.app.InBestBackend.domain.dto.NegocioDTO;
 import com.app.InBestBackend.domain.service.EmprendedorService;
 import com.app.InBestBackend.domain.service.NegocioService;
+import com.app.InBestBackend.persistence.entity.Emprendedor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

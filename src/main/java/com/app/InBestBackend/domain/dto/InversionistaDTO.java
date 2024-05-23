@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class InversionistaDTO {
+    private Long id_inversionista;
     private Usuario usuario;
     private List<Solicitud> solicitudes;
     private List<Inversion> inversiones;

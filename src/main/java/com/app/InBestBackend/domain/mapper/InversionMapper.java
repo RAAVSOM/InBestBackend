@@ -10,6 +10,7 @@ public class InversionMapper {
         inversion.setNegocio(inversionDTO.getNegocio());
         inversion.setEmprendedor(inversionDTO.getEmprendedor());
         inversion.setInversionista(inversionDTO.getInversionista());
+        inversion.setId_inversion(inversionDTO.getId_inversion());
         return inversion;
     }
 
@@ -19,6 +20,7 @@ public class InversionMapper {
         inversionDTO.setNegocio(inversion.getNegocio());
         inversionDTO.setEmprendedor(inversion.getEmprendedor());
         inversionDTO.setInversionista(inversion.getInversionista());
+        inversionDTO.setId_inversion(inversion.getId_inversion());
         return inversionDTO;
     }
 }

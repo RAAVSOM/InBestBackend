@@ -9,6 +9,7 @@ public class NegocioMapper {
         negocio.setSolicitudes(negocioDTO.getSolicitudes());
         negocio.setEmprendedor(negocioDTO.getEmprendedor());
         negocio.setAprobado(negocioDTO.isAprobado());
+        negocio.setId_negocio(negocioDTO.getId_negocio());
         return negocio;
     }
 
@@ -17,6 +18,7 @@ public class NegocioMapper {
         negocioDTO.setSolicitudes(negocio.getSolicitudes());
         negocioDTO.setEmprendedor(negocio.getEmprendedor());
         negocioDTO.setAprobado(negocio.isAprobado());
+        negocioDTO.setId_negocio(negocio.getId_negocio());
         return negocioDTO;
     }
 }

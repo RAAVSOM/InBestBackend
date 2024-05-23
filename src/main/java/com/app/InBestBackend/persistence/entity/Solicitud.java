@@ -13,11 +13,13 @@ public class Solicitud {
     private float porcentaje_rentabilidad;
     private float porcentaje_liquidez;
     private float nivel_riezgotolerado;
-    
+
+    //realizar control de sobrecarga vaciando las listas
     @ManyToOne
     @JoinColumn(name="fk_inversionista")
     private Inversionista inversionista;
-    
+
+    //realizar control de sobrecarga vaciando las solicitudes y al emprendedor
     @ManyToOne
     @JoinColumn(name="fk_negocio")
     private Negocio negocio;

@@ -12,6 +12,7 @@ public class UsuarioMapper {
         usuario.setClave(usuarioDTO.getClave());
         usuario.setUsuario(usuarioDTO.getUsuario());
         usuario.setTipo_usuario(usuarioDTO.getTipo_usuario());
+        usuario.setId_usuario(usuarioDTO.getId_usuario());
         return usuario;
     }
 
@@ -22,6 +23,7 @@ public class UsuarioMapper {
         usuarioDTO.setClave(usuario.getClave());
         usuarioDTO.setUsuario(usuario.getUsuario());
         usuarioDTO.setTipo_usuario(usuario.getTipo_usuario());
+        usuarioDTO.setId_usuario(usuario.getId_usuario());
         return usuarioDTO;
     }
 }

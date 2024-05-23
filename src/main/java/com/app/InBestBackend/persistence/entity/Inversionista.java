@@ -13,13 +13,15 @@ public class Inversionista {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_inversionista;
     
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="id_usuario")
     private Usuario usuario;
-    
+
+    //realizar control de sobrecarga en solicitudes borrando las clases que estan en solicitudes
     @OneToMany(mappedBy = "inversionista", targetEntity = Solicitud.class)
     private List<Solicitud> solicitudes;
-    
+
+    //realizar control de sobrecarga en solicitudes borrando las clases que estan en inversiones
     @OneToMany(mappedBy = "inversionista", targetEntity = Inversion.class)
     private List<Inversion> inversiones;
     

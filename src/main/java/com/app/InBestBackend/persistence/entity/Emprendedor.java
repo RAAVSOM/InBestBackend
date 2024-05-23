@@ -11,14 +11,16 @@ public class Emprendedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_emprendedor;
-    
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="id_persona")
     private Usuario usuario;
-    
+
+    //realizar control de sobrecarga vaciando el emprendedor y las listas
     @OneToMany(mappedBy = "emprendedor", targetEntity = Negocio.class)
     private List<Negocio> negocios;
-    
+
+    //realizar control de sobrecarga vaciando todas las clases
     @OneToMany(mappedBy = "emprendedor", targetEntity = Inversion.class)
     private List<Inversion> inversiones;
     

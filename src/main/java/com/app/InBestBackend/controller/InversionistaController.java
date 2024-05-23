@@ -15,7 +15,7 @@ public class InversionistaController {
     @Autowired
     private InversionistaService inversionistaService;
     
-    @PostMapping("/registerInversionista")
+    @PostMapping("registerInversionista")
     public String registerInversionista(@RequestBody InversionistaDTO inversionistaDTO){
         inversionistaService.save(inversionistaDTO);
         return "exito";

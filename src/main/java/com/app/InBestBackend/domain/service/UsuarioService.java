@@ -18,9 +18,19 @@ public class UsuarioService {
     public UsuarioDTO loadUsuarioByUsuario(String usuario) throws Exception{
         Usuario usuarioComp = usuarioRepository.findByUsuario(usuario);
         if(usuarioComp == null){
-            return new UsuarioDTO("", "");
+            UsuarioDTO usuarioMal = new UsuarioDTO();
+            usuarioMal.setUsuario("");
+            usuarioMal.setClave("");
+            return usuarioMal;
+        }else{
+            UsuarioDTO usuarioBien = new UsuarioDTO();
+            usuarioBien.setId_usuario(usuarioComp.getId_usuario());
+            usuarioBien.setUsuario(usuarioComp.getUsuario());
+            usuarioBien.setClave(usuarioComp.getClave());
+            usuarioBien.setTipo_usuario(usuarioComp.getTipo_usuario());
+            return usuarioBien;
         }
-        return new UsuarioDTO(usuarioComp.getUsuario(), usuarioComp.getClave());
+
     }
         
     public boolean validarContraseña(UsuarioDTO usersDTO, String clave){

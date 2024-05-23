@@ -9,6 +9,7 @@ public class InversionistaMapper {
         inversionista.setUsuario(inversionistaDTO.getUsuario());
         inversionista.setSolicitudes(inversionistaDTO.getSolicitudes());
         inversionista.setInversiones(inversionistaDTO.getInversiones());
+        inversionista.setId_inversionista(inversionistaDTO.getId_inversionista());
         return inversionista;
     }
 
@@ -17,6 +18,7 @@ public class InversionistaMapper {
         inversionistaDTO.setUsuario(inversionista.getUsuario());
         inversionistaDTO.setSolicitudes(inversionista.getSolicitudes());
         inversionistaDTO.setInversiones(inversionista.getInversiones());
+        inversionistaDTO.setId_inversionista(inversionista.getId_inversionista());
         return inversionistaDTO;
     }
 }

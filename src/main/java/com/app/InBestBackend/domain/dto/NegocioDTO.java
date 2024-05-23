@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 public class NegocioDTO {
+    private Long id_negocio;
     private boolean aprobado;
     private Emprendedor emprendedor;
     private List<Solicitud> solicitudes;

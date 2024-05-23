@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class InversionDTO {
-    
+    private Long id_inversion;
     private Inversionista inversionista;
     private Solicitud solicitud;
     private Negocio negocio;
