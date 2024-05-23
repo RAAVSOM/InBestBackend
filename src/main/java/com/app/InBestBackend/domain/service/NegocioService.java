@@ -4,10 +4,12 @@ import com.app.InBestBackend.domain.dto.NegocioDTO;
 import com.app.InBestBackend.domain.mapper.NegocioMapper;
 import com.app.InBestBackend.persistence.entity.Emprendedor;
 import com.app.InBestBackend.persistence.entity.Negocio;
+import com.app.InBestBackend.persistence.repository.EmprendedorRepository;
 import com.app.InBestBackend.persistence.repository.NegocioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 public class NegocioService {
     @Autowired
     private NegocioRepository negocioRepository;
+    @Autowired
+    private EmprendedorRepository emprendedorRepository;
     
     //----------funciones administrador-----------
     public List<NegocioDTO> cargarNegociosSinAprobar(boolean aprobado){
@@ -48,8 +52,18 @@ public class NegocioService {
         negocioRepository.save(NegocioMapper.toEntinty(negocioDTO));
     }
     
-    public List<NegocioDTO> cargarNegociosEmprendedor(Emprendedor emprendedor){
-        return negocioRepository.findAllByEmprendedor(emprendedor).stream().map(NegocioMapper::toDTO).collect(Collectors.toList());
+    public List<NegocioDTO> cargarNegociosEmprendedor(Long id){
+        Emprendedor emprendedor = emprendedorRepository.findById(id).orElse(null);
+        List<NegocioDTO> negociosBd = negocioRepository.findAllByEmprendedor(emprendedor).stream().map(NegocioMapper::toDTO).collect(Collectors.toList());
+
+        List<NegocioDTO> negocios = new ArrayList<>();
+        for(NegocioDTO negocio: negociosBd){
+            negocio.setEmprendedor(null);
+            negocio.getSolicitudes().clear();
+            negocios.add(negocio);
+        }
+
+        return negocios;
     }
     
     public String actualizarNegocio(Long id, NegocioDTO negocioDTO){

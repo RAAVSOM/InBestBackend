@@ -70,7 +70,7 @@ public class NegocioController {
     
     @GetMapping("cargarnegocios/{id}")
     public List<NegocioDTO> cargarNegociosE(@PathVariable Long id){
-        return negocioService.cargarNegociosEmprendedor(emprendedorService.buscarEmprendedor(id));
+        return negocioService.cargarNegociosEmprendedor(id);
     }
     
     @PutMapping("actualizarNegocio/{id}")
