@@ -18,7 +18,10 @@ public class InversionistaService {
         return inversionistaDTO;
     }
     
-    public Inversionista buscarInversionista(Long id){
-        return inversionistaRepository.findById(id).orElse(null);
+    public InversionistaDTO buscarInversionista(Long id){
+        Inversionista inversionista = inversionistaRepository.findById(id).orElse(null);
+        inversionista.getSolicitudes().clear();
+        inversionista.getInversiones().clear();
+        return InversionistaMapper.toDTO(inversionista);
     }
 }

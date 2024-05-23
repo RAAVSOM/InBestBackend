@@ -4,10 +4,14 @@ import com.app.InBestBackend.domain.dto.SolicitudDTO;
 import com.app.InBestBackend.domain.mapper.SolicitudMapper;
 import com.app.InBestBackend.persistence.entity.Inversionista;
 import com.app.InBestBackend.persistence.entity.Negocio;
+import com.app.InBestBackend.persistence.entity.Solicitud;
+import com.app.InBestBackend.persistence.repository.InversionistaRepository;
+import com.app.InBestBackend.persistence.repository.NegocioRepository;
 import com.app.InBestBackend.persistence.repository.SolicitudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,10 +19,28 @@ import java.util.stream.Collectors;
 public class SolicitudService {
     @Autowired
     private SolicitudRepository solicitudRepository;
+
+    @Autowired
+    private NegocioRepository negocioRepository;
+
+    @Autowired
+    private InversionistaRepository inversionistaRepository;
     
     //------------funciones inversionista-----------------
-    public List<SolicitudDTO> cargarSolicitudes(Negocio negocio, Inversionista inversionista){
-        return solicitudRepository.findAllByNegocioAndInversionista(negocio, inversionista).stream().map(SolicitudMapper::toDTO).collect(Collectors.toList());
+    public List<SolicitudDTO> cargarSolicitudes(Long id, Long id_negocio){
+        Negocio negocio = negocioRepository.findById(id_negocio).orElse(null);
+        Inversionista inversionista = inversionistaRepository.findById(id).orElse(null);
+
+        List<Solicitud> solicitudesBd = solicitudRepository.findAllByNegocioAndInversionista(negocio, inversionista);
+        List<SolicitudDTO> solicitudes = new ArrayList<>();
+        for (Solicitud solicitud : solicitudesBd){
+            solicitud.setInversionista(null);
+            solicitud.getNegocio().getSolicitudes().clear();
+            solicitud.getNegocio().setEmprendedor(null);
+            solicitudes.add(SolicitudMapper.toDTO(solicitud));
+        }
+
+        return solicitudes;
     }
     
     public void agregarSolicitud(SolicitudDTO solicitudDTO){
@@ -26,9 +48,9 @@ public class SolicitudService {
     }
     
     public String eliminarsolicitud(Long id){
-        SolicitudDTO solicitudDTO = SolicitudMapper.toDTO(solicitudRepository.findById(id).orElse(null));
-        if(solicitudDTO != null){
-            solicitudRepository.delete(SolicitudMapper.toEntinty(solicitudDTO));
+        Solicitud solicitud = solicitudRepository.findById(id).orElse(null);
+        if(solicitud != null){
+            solicitudRepository.delete(solicitud);
             return "eliminado satisfactoriamente";
         }else{
             return "no se encontro negocio";
@@ -36,14 +58,14 @@ public class SolicitudService {
     }
     
     public String actualizarSolicitud(Long id, SolicitudDTO solicitudDTO){
-        SolicitudDTO solicitudDTOfromDB = SolicitudMapper.toDTO(solicitudRepository.findById(id).orElse(null));
-        if(solicitudDTOfromDB != null){
-            solicitudDTOfromDB.setInversionista(solicitudDTO.getInversionista());
-            solicitudDTOfromDB.setNivel_riezgotolerado(solicitudDTO.getNivel_riezgotolerado());
-            solicitudDTOfromDB.setPorcentaje_liquidez(solicitudDTO.getPorcentaje_liquidez());
-            solicitudDTOfromDB.setPorcentaje_rentabilidad(solicitudDTO.getPorcentaje_rentabilidad());
-            solicitudDTOfromDB.setValor_solicitud(solicitudDTO.getValor_solicitud());
-            solicitudRepository.save(SolicitudMapper.toEntinty(solicitudDTOfromDB));
+        Solicitud solicitudBd = solicitudRepository.findById(id).orElse(null);
+        if(solicitudBd != null){
+            solicitudBd.setInversionista(solicitudDTO.getInversionista());
+            solicitudBd.setNivel_riezgotolerado(solicitudDTO.getNivel_riezgotolerado());
+            solicitudBd.setPorcentaje_liquidez(solicitudDTO.getPorcentaje_liquidez());
+            solicitudBd.setPorcentaje_rentabilidad(solicitudDTO.getPorcentaje_rentabilidad());
+            solicitudBd.setValor_solicitud(solicitudDTO.getValor_solicitud());
+            solicitudRepository.save(solicitudBd);
             return "actualizado satisfactoriamente";
         }else{
             return "no se encontro negocio";
@@ -51,19 +73,37 @@ public class SolicitudService {
     }
     
     public SolicitudDTO verSolicitudI(Long id){
-        return SolicitudMapper.toDTO(solicitudRepository.findById(id).orElse(null));
+        Solicitud solicitudBd = solicitudRepository.findById(id).orElse(null);
+        solicitudBd.setInversionista(null);
+        solicitudBd.getNegocio().getSolicitudes().clear();
+        solicitudBd.getNegocio().setEmprendedor(null);
+        return SolicitudMapper.toDTO(solicitudBd);
     }
     
     //------------funciones emprendedor----------------
-    public List<SolicitudDTO> cargarSolicitudesNegocio(Negocio negocio){
-        return solicitudRepository.findAllByNegocio(negocio).stream().map(SolicitudMapper::toDTO).collect(Collectors.toList());
+    public List<SolicitudDTO> cargarSolicitudesNegocio(Long id){
+        Negocio negocio = negocioRepository.findById(id).orElse(null);
+        List<Solicitud> solicitudesBd = solicitudRepository.findAllByNegocio(negocio);
+        List<SolicitudDTO> solicitudes = new ArrayList<>();
+        for (Solicitud solicitud : solicitudesBd){
+            solicitud.getInversionista().getSolicitudes().clear();
+            solicitud.getInversionista().getInversiones().clear();
+            solicitud.setNegocio(null);
+            solicitudes.add(SolicitudMapper.toDTO(solicitud));
+        }
+        return solicitudes;
     }
     
     public SolicitudDTO verSolicitudE(Long id){
-        return SolicitudMapper.toDTO(solicitudRepository.findById(id).orElse(null));
+        Solicitud solicitudBd = solicitudRepository.findById(id).orElse(null);
+        solicitudBd.getInversionista().getSolicitudes().clear();
+        solicitudBd.getInversionista().getInversiones().clear();
+        solicitudBd.setNegocio(null);
+        return SolicitudMapper.toDTO(solicitudBd);
     }
     
-    public void concluirSubasta(Negocio negocio){
+    public void concluirSubasta(Long id){
+        Negocio negocio = negocioRepository.findById(id).orElse(null);
         solicitudRepository.deleteAllByNegocio(negocio);
     }
 }

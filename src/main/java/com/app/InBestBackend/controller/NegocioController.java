@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/negocio")
+@RequestMapping("/negocio")
 public class NegocioController {
     
     @Autowired
@@ -46,17 +46,17 @@ public class NegocioController {
     }*/
     
     //-------------funciones administrador-------------
-    @GetMapping("sinaprobar")
+    @PostMapping("/sinaprobar")
     public List<NegocioDTO> cargarNegociosSinAprobar(){
-        return negocioService.cargarNegociosSinAprobar(false);
+        return negocioService.cargarNegociosSinAprobar();
     }
     
-    @PutMapping("aceptarNegocio/{id}")
+    @PutMapping("/aceptarNegocio/{id}")
     public String aceptarNegocio(@PathVariable Long id){
         return negocioService.aceptarNegocio(id);
     }
     
-    @DeleteMapping("rechazarNegocio/{id}")
+    @DeleteMapping("/rechazarNegocio/{id}")
     public String rechazarNegocio(@PathVariable Long id){
         return negocioService.rechazarNegocio(id);
     }
@@ -68,12 +68,12 @@ public class NegocioController {
         return "exito";
     }
     
-    @GetMapping("cargarnegocios/{id}")
+    @GetMapping("/cargarnegocios/{id}")
     public List<NegocioDTO> cargarNegociosE(@PathVariable Long id){
         return negocioService.cargarNegociosEmprendedor(id);
     }
     
-    @PutMapping("actualizarNegocio/{id}")
+    @PutMapping("/actualizarNegocio/{id}")
     public String actualizarNegocio(@PathVariable Long id, @RequestBody NegocioDTO negocioDTO){
         return negocioService.actualizarNegocio(id, negocioDTO);
     }
@@ -83,7 +83,7 @@ public class NegocioController {
         return negocioService.eliminarNegocio(id);
     }
     
-    @GetMapping("vernegocioe/{id}")
+    @GetMapping("/vernegocioe/{id}")
     public NegocioDTO verNegocioE(@PathVariable Long id){
         return negocioService.verNegocioDesdeE(id);
     }
@@ -98,7 +98,7 @@ public class NegocioController {
     
     @GetMapping("vernegocioi/{id}")
     public NegocioDTO verNegocioI(@PathVariable Long id){
-        return negocioService.verNegocioDesdeE(id);
+        return negocioService.verNegocioDesdeI(id);
     }
     
     //-------------funciones filtro---(PROXIMAMENTE)-------------

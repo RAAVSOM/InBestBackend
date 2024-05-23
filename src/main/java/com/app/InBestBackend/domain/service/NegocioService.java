@@ -4,6 +4,7 @@ import com.app.InBestBackend.domain.dto.NegocioDTO;
 import com.app.InBestBackend.domain.mapper.NegocioMapper;
 import com.app.InBestBackend.persistence.entity.Emprendedor;
 import com.app.InBestBackend.persistence.entity.Negocio;
+import com.app.InBestBackend.persistence.entity.Solicitud;
 import com.app.InBestBackend.persistence.repository.EmprendedorRepository;
 import com.app.InBestBackend.persistence.repository.NegocioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,18 @@ public class NegocioService {
     private EmprendedorRepository emprendedorRepository;
     
     //----------funciones administrador-----------
-    public List<NegocioDTO> cargarNegociosSinAprobar(boolean aprobado){
-        return negocioRepository.findAllByAprobado(aprobado).stream().map(NegocioMapper::toDTO).collect(Collectors.toList());
+    public List<NegocioDTO> cargarNegociosSinAprobar(){
+        List<Negocio> negociosBd = negocioRepository.findAllByAprobado(false);
+        List<NegocioDTO> negocios = new ArrayList<>();
+        for(Negocio negocio : negociosBd){
+            negocio.getEmprendedor().getNegocios().clear();
+            negocio.getEmprendedor().getInversiones().clear();
+            negocio.getSolicitudes().clear();
+
+            negocios.add(NegocioMapper.toDTO(negocio));
+        }
+
+        return negocios;
     }
     
     public String rechazarNegocio(Long id){
@@ -67,12 +78,10 @@ public class NegocioService {
     }
     
     public String actualizarNegocio(Long id, NegocioDTO negocioDTO){
-        NegocioDTO negocioDTOfromDB = NegocioMapper.toDTO(negocioRepository.findById(id).orElse(null));
-        if(negocioDTOfromDB != null){
-            negocioDTOfromDB.setAprobado(negocioDTO.isAprobado());
-            negocioDTOfromDB.setEmprendedor(negocioDTO.getEmprendedor());
-            negocioDTOfromDB.setSolicitudes(negocioDTO.getSolicitudes());
-            negocioRepository.save(NegocioMapper.toEntinty(negocioDTOfromDB));
+        Negocio negocioBd = negocioRepository.findById(id).orElse(null);
+        if(negocioBd != null){
+            negocioBd.setAprobado(negocioDTO.isAprobado());
+            negocioRepository.save(negocioBd);
             return "actualizado satisfactoriamente";
         }else{
             return "no se encontro negocio";
@@ -80,9 +89,9 @@ public class NegocioService {
     }
     
     public String eliminarNegocio(Long id){
-        NegocioDTO negocioDTO = NegocioMapper.toDTO(negocioRepository.findById(id).orElse(null));
-        if(negocioDTO != null){
-            negocioRepository.delete(NegocioMapper.toEntinty(negocioDTO));
+        Negocio negocio = negocioRepository.findById(id).orElse(null);
+        if(negocio != null){
+            negocioRepository.delete(negocio);
             return "eliminado satisfactoriamente";
         }else{
             return "no se encontro negocio";
@@ -90,18 +99,39 @@ public class NegocioService {
     }
     
     public NegocioDTO verNegocioDesdeE(Long id){
-        return NegocioMapper.toDTO(negocioRepository.findById(id).orElse(null));  
+        Negocio negocioBd = negocioRepository.findById(id).orElse(null);
+        negocioBd.setEmprendedor(null);
+        List<Solicitud> solicitudes = new ArrayList<>();
+        for (Solicitud solicitud : negocioBd.getSolicitudes()){
+            solicitud.getInversionista().getInversiones().clear();
+            solicitud.getInversionista().getSolicitudes().clear();
+            solicitud.setNegocio(null);
+            solicitudes.add(solicitud);
+        }
+        negocioBd.setSolicitudes(solicitudes);
+        return NegocioMapper.toDTO(negocioBd);
     }
     
     
     //-----------funciones inversionista-----------
     
     public List<NegocioDTO> cargarNegocios(){
-        return negocioRepository.findAll().stream().map(NegocioMapper::toDTO).collect(Collectors.toList());
+        List<Negocio> negociosBd = negocioRepository.findAll();
+        List<NegocioDTO> negocios = new ArrayList<>();
+        for(Negocio negocio: negociosBd){
+            negocio.getEmprendedor().getNegocios().clear();
+            negocio.getEmprendedor().getInversiones().clear();
+            negocio.getSolicitudes().clear();
+            negocios.add(NegocioMapper.toDTO(negocio));
+        }
+        return negocios;
     }
     
     public NegocioDTO verNegocioDesdeI(Long id){
-        return NegocioMapper.toDTO(negocioRepository.findById(id).orElse(null));  
+        Negocio negocioBd = negocioRepository.findById(id).orElse(null);
+        negocioBd.setEmprendedor(null);
+        negocioBd.getSolicitudes().clear();
+        return NegocioMapper.toDTO(negocioBd);
     }
     
     public Negocio buscarNegocio(Long id){
