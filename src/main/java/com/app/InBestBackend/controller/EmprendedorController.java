@@ -5,6 +5,7 @@ import com.app.InBestBackend.domain.service.EmprendedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/emprendedor")
 public class EmprendedorController {

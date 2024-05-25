@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InversionistaRepository extends JpaRepository<Inversionista, Long>{
-    public Inversionista findInversionistaByUsuario(Usuario usuario);
+    public Inversionista findByUsuario(Usuario usuario);
 }

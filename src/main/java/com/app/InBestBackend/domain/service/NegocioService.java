@@ -59,7 +59,9 @@ public class NegocioService {
     
     
     //---------------funciones emprendedor-------------
-    public void agregarNegocio(NegocioDTO negocioDTO){
+    public void agregarNegocio(NegocioDTO negocioDTO, Long id){
+        Emprendedor emprendedor = emprendedorRepository.findById(id).orElse(null);
+        negocioDTO.setEmprendedor(emprendedor);
         negocioRepository.save(NegocioMapper.toEntinty(negocioDTO));
     }
     
@@ -111,12 +113,20 @@ public class NegocioService {
         negocioBd.setSolicitudes(solicitudes);
         return NegocioMapper.toDTO(negocioBd);
     }
+
+    public String cerrarSubasta(Long id){
+        Negocio negocio = negocioRepository.findById(id).orElse(null);
+        negocio.setFinalizado(true);
+        negocio.getSolicitudes().clear();
+        negocioRepository.save(negocio);
+        return "exito";
+    }
     
     
     //-----------funciones inversionista-----------
     
     public List<NegocioDTO> cargarNegocios(){
-        List<Negocio> negociosBd = negocioRepository.findAll();
+        List<Negocio> negociosBd = negocioRepository.findAllByAprobadoAndFinalizado(true, false);
         List<NegocioDTO> negocios = new ArrayList<>();
         for(Negocio negocio: negociosBd){
             negocio.getEmprendedor().getNegocios().clear();

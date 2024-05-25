@@ -43,7 +43,11 @@ public class SolicitudService {
         return solicitudes;
     }
     
-    public void agregarSolicitud(SolicitudDTO solicitudDTO){
+    public void agregarSolicitud(SolicitudDTO solicitudDTO, Long id_I, Long id_N){
+        Inversionista inversionista = inversionistaRepository.findById(id_I).orElse(null);
+        Negocio negocio = negocioRepository.findById(id_N).orElse(null);
+        solicitudDTO.setInversionista(inversionista);
+        solicitudDTO.setNegocio(negocio);
         solicitudRepository.save(SolicitudMapper.toEntinty(solicitudDTO));
     }
     

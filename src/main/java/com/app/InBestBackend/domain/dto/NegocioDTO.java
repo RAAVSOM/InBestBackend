@@ -10,6 +10,11 @@ import java.util.List;
 public class NegocioDTO {
     private Long id_negocio;
     private boolean aprobado;
+    private boolean finalizado;
+    private String titulo;
+    private String descripcion;
+    private String lugar;
+    private String tipo_negocio;
     private Emprendedor emprendedor;
     private List<Solicitud> solicitudes;
 }

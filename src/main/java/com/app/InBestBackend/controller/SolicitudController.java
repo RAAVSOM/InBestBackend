@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/solicitud")
 public class SolicitudController {
@@ -21,9 +22,9 @@ public class SolicitudController {
         return solicitudService.cargarSolicitudes(id, id_negocio);
     }
     
-    @PostMapping("/solicitudAgregar")
-    public String agregarSolicitud(@RequestBody SolicitudDTO solicitudDTO){
-        solicitudService.agregarSolicitud(solicitudDTO);
+    @PostMapping("/solicitudAgregar/{id_I}/{id_N}")
+    public String agregarSolicitud(@RequestBody SolicitudDTO solicitudDTO,@PathVariable Long id_I,@PathVariable Long id_N){
+        solicitudService.agregarSolicitud(solicitudDTO, id_I, id_N);
         return "exito";
     }
     

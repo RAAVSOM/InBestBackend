@@ -13,7 +13,7 @@ public class Emprendedor {
     private Long id_emprendedor;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="id_persona")
+    @JoinColumn(name="id_usuario")
     private Usuario usuario;
 
     //realizar control de sobrecarga vaciando el emprendedor y las listas

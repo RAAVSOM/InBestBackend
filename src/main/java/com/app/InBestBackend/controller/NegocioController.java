@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/negocio")
 public class NegocioController {
@@ -46,7 +47,7 @@ public class NegocioController {
     }*/
     
     //-------------funciones administrador-------------
-    @PostMapping("/sinaprobar")
+    @GetMapping("/sinaprobar")
     public List<NegocioDTO> cargarNegociosSinAprobar(){
         return negocioService.cargarNegociosSinAprobar();
     }
@@ -62,9 +63,9 @@ public class NegocioController {
     }
     
     //-------------funciones emprendedor---------------
-    @PostMapping("negocioAgregar")
-    public String agregarNegocio(@RequestBody NegocioDTO negocioDTO){
-        negocioService.agregarNegocio(negocioDTO);
+    @PostMapping("/negocioAgregar/{id}")
+    public String agregarNegocio(@RequestBody NegocioDTO negocioDTO, @PathVariable Long id){
+        negocioService.agregarNegocio(negocioDTO, id);
         return "exito";
     }
     
@@ -86,6 +87,11 @@ public class NegocioController {
     @GetMapping("/vernegocioe/{id}")
     public NegocioDTO verNegocioE(@PathVariable Long id){
         return negocioService.verNegocioDesdeE(id);
+    }
+
+    @PutMapping("/cerrar/{id}")
+    public String cerrarSubasta(@PathVariable Long id){
+        return negocioService.cerrarSubasta(id);
     }
     
     

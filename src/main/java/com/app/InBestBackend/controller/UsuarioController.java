@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class UsuarioController {
@@ -20,8 +21,13 @@ public class UsuarioController {
         UsuarioDTO usuarioEncontrado = usersService.loadUsuarioByUsuario(usersDTO.getUsuario());
         if(usuarioEncontrado != null && usersService.validarContraseña(usuarioEncontrado, usersDTO.getClave())){
             return usuarioEncontrado;
+        }else{
+            UsuarioDTO usuarioMal = new UsuarioDTO();
+            usuarioMal.setTipo_usuario("");
+            usuarioMal.setUsuario("");
+            usuarioMal.setClave("");
+            return usuarioMal;
         }
-        return usuarioEncontrado;
     }
     
     @GetMapping

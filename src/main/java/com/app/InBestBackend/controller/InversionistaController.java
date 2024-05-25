@@ -5,6 +5,7 @@ import com.app.InBestBackend.domain.service.InversionistaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/inversionista")
 public class InversionistaController {
@@ -12,7 +13,7 @@ public class InversionistaController {
     @Autowired
     private InversionistaService inversionistaService;
     
-    @PostMapping("registerInversionista")
+    @PostMapping("/registerInversionista")
     public String registerInversionista(@RequestBody InversionistaDTO inversionistaDTO){
         inversionistaService.save(inversionistaDTO);
         return "exito";
@@ -21,5 +22,10 @@ public class InversionistaController {
     @GetMapping("/{id}")
     public InversionistaDTO buscarInversionista(@PathVariable Long id){
         return  inversionistaService.buscarInversionista(id);
+    }
+
+    @PutMapping("/{id}")
+    public String actualizarInfo(@RequestBody InversionistaDTO inversionistaDTO, @PathVariable Long id){
+        return inversionistaService.actualizarInfo(inversionistaDTO, id);
     }
 }

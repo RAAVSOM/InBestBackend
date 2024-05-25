@@ -12,6 +12,11 @@ public class Negocio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_negocio;
     private boolean aprobado;
+    private boolean finalizado;
+    private String titulo;
+    private String descripcion;
+    private String lugar;
+    private String tipo_negocio;
 
     //realizar control de sobrecarga vaciando las clases del emprendedor
     @ManyToOne

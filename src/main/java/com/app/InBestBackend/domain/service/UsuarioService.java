@@ -34,7 +34,7 @@ public class UsuarioService {
     }
         
     public boolean validarContraseña(UsuarioDTO usersDTO, String clave){
-        return usersDTO.getClave().matches(clave);
+        return usersDTO.getClave().equals(clave);
     }
     
     public List<Usuario> cargartodos(){
