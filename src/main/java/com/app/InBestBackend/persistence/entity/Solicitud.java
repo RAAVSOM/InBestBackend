@@ -13,6 +13,7 @@ public class Solicitud {
     private float porcentaje_rentabilidad;
     private float porcentaje_liquidez;
     private float nivel_riezgotolerado;
+    private boolean aceptada;
 
     //realizar control de sobrecarga vaciando las listas
     @ManyToOne

@@ -23,9 +23,8 @@ public class SolicitudController {
     }
     
     @PostMapping("/solicitudAgregar/{id_I}/{id_N}")
-    public String agregarSolicitud(@RequestBody SolicitudDTO solicitudDTO,@PathVariable Long id_I,@PathVariable Long id_N){
+    public void agregarSolicitud(@RequestBody SolicitudDTO solicitudDTO,@PathVariable Long id_I,@PathVariable Long id_N){
         solicitudService.agregarSolicitud(solicitudDTO, id_I, id_N);
-        return "exito";
     }
     
     @DeleteMapping("/eliminarsolicitud/{id}")

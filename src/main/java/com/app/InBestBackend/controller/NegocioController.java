@@ -2,8 +2,10 @@ package com.app.InBestBackend.controller;
 
 import com.app.InBestBackend.domain.dto.NegocioDTO;
 import com.app.InBestBackend.domain.service.EmprendedorService;
+import com.app.InBestBackend.domain.service.InversionService;
 import com.app.InBestBackend.domain.service.NegocioService;
 import com.app.InBestBackend.persistence.entity.Emprendedor;
+import com.app.InBestBackend.persistence.repository.InversionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,45 +18,29 @@ public class NegocioController {
     
     @Autowired
     private NegocioService negocioService;
-    
     @Autowired
-    private EmprendedorService emprendedorService;
-    
-    /*@Autowired
-    private DropboxService dropboxService;
-    
-    //--------------funcion subida y descarga de archivos-------------
-    @PostMapping("/{idNegocio}/subir-archivo/{nombreArchivo}")
-    public ResponseEntity<String> subirArchivo(@PathVariable Long idNegocio, @RequestParam("file") MultipartFile file, @PathVariable String nombreArchivo) {
-        try {
-            dropboxService.uploadFile(file, idNegocio, nombreArchivo);
-            return ResponseEntity.ok("Archivo subido con éxito");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir el archivo");
-        }
-    }
+    private InversionRepository inversionRepository;
+    @Autowired
+    private InversionService inversionService;
 
-    @PostMapping("/{idNegocio}/descargar-archivo/{nombreArchivo}")
-    public ResponseEntity<String> descargarArchivo(@PathVariable Long idNegocio, @PathVariable String nombreArchivo){
-        try {
-            FileMetadata file = dropboxService.downloadAllFilesInFolder(idNegocio, nombreArchivo);
-            return ResponseEntity.ok(file.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir el archivo");
-        }
-    }*/
-    
     //-------------funciones administrador-------------
     @GetMapping("/sinaprobar")
     public List<NegocioDTO> cargarNegociosSinAprobar(){
         return negocioService.cargarNegociosSinAprobar();
     }
+    @GetMapping("/sincorregir")
+    public List<NegocioDTO> cargarNegociosSinCorregir(){
+        return negocioService.cargarNegociosEnCorreccion();
+    }
     
     @PutMapping("/aceptarNegocio/{id}")
     public String aceptarNegocio(@PathVariable Long id){
         return negocioService.aceptarNegocio(id);
+    }
+
+    @PutMapping("/corregirNegocio/{id}")
+    public void corregirNegocio(@PathVariable Long id, @RequestBody NegocioDTO negocioDTO){
+        negocioService.corregirNegocio(id ,negocioDTO);
     }
     
     @DeleteMapping("/rechazarNegocio/{id}")
@@ -64,9 +50,8 @@ public class NegocioController {
     
     //-------------funciones emprendedor---------------
     @PostMapping("/negocioAgregar/{id}")
-    public String agregarNegocio(@RequestBody NegocioDTO negocioDTO, @PathVariable Long id){
-        negocioService.agregarNegocio(negocioDTO, id);
-        return "exito";
+    public Long agregarNegocio(@RequestBody NegocioDTO negocioDTO, @PathVariable Long id){
+        return negocioService.agregarNegocio(negocioDTO, id);
     }
     
     @GetMapping("/cargarnegocios/{id}")
@@ -75,11 +60,16 @@ public class NegocioController {
     }
     
     @PutMapping("/actualizarNegocio/{id}")
-    public String actualizarNegocio(@PathVariable Long id, @RequestBody NegocioDTO negocioDTO){
-        return negocioService.actualizarNegocio(id, negocioDTO);
+    public void actualizarNegocio_Url(@PathVariable Long id, @RequestBody NegocioDTO negocioDTO){
+        negocioService.actualizarNegocio_Url(id, negocioDTO);
+    }
+
+    @PutMapping("/actualizarNegocioGeneral/{id}")
+    public void actualizarNegocio(@PathVariable Long id, @RequestBody NegocioDTO negocioDTO){
+        negocioService.actualizarNegocio(id, negocioDTO);
     }
     
-    @DeleteMapping("eliminarNegocio/{id}")
+    @DeleteMapping("/eliminarNegocio/{id}")
     public String eliminarNegocio(@PathVariable Long id){
         return negocioService.eliminarNegocio(id);
     }
@@ -93,8 +83,11 @@ public class NegocioController {
     public String cerrarSubasta(@PathVariable Long id){
         return negocioService.cerrarSubasta(id);
     }
-    
-    
+
+    @PutMapping("/agregarMontos/{id}")
+    public void agregarMontos(@PathVariable Long id, @RequestBody NegocioDTO negocioDTO){
+        negocioService.agregar_montos(id, negocioDTO);
+    }
     //-----------funciones inversionista-----------
     
     @GetMapping
@@ -106,6 +99,16 @@ public class NegocioController {
     public NegocioDTO verNegocioI(@PathVariable Long id){
         return negocioService.verNegocioDesdeI(id);
     }
-    
+
+    @GetMapping("/{id}")
+    public List<NegocioDTO> cargarInversiones(@PathVariable Long id){
+        return inversionService.cargarInversiones(id);
+    }
+
+
     //-------------funciones filtro---(PROXIMAMENTE)-------------
+    @GetMapping("/buscar")
+    public List<NegocioDTO> busqueda(@RequestParam String info){
+        return negocioService.searchNegocios(info);
+    }
 }

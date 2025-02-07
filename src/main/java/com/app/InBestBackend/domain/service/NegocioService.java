@@ -23,12 +23,28 @@ public class NegocioService {
     
     //----------funciones administrador-----------
     public List<NegocioDTO> cargarNegociosSinAprobar(){
-        List<Negocio> negociosBd = negocioRepository.findAllByAprobado(false);
+        List<Negocio> negociosBd = negocioRepository.findAllByAprobadoAndCorreccion(false, false);
         List<NegocioDTO> negocios = new ArrayList<>();
         for(Negocio negocio : negociosBd){
             negocio.getEmprendedor().getNegocios().clear();
             negocio.getEmprendedor().getInversiones().clear();
             negocio.getSolicitudes().clear();
+            negocio.getInversiones().clear();
+
+            negocios.add(NegocioMapper.toDTO(negocio));
+        }
+
+        return negocios;
+    }
+
+    public List<NegocioDTO> cargarNegociosEnCorreccion(){
+        List<Negocio> negociosBd = negocioRepository.findAllByAprobadoAndCorreccion(false, true);
+        List<NegocioDTO> negocios = new ArrayList<>();
+        for(Negocio negocio : negociosBd){
+            negocio.getEmprendedor().getNegocios().clear();
+            negocio.getEmprendedor().getInversiones().clear();
+            negocio.getSolicitudes().clear();
+            negocio.getInversiones().clear();
 
             negocios.add(NegocioMapper.toDTO(negocio));
         }
@@ -50,7 +66,21 @@ public class NegocioService {
         NegocioDTO negocioDTO = NegocioMapper.toDTO(negocioRepository.findById(id).orElse(null));
         if(negocioDTO != null){
             negocioDTO.setAprobado(true);
+            negocioDTO.setCorreccion(false);
             negocioRepository.save(NegocioMapper.toEntinty(negocioDTO));
+            return "actualizado satisfactoriamente";
+        }else{
+            return "no se encontro negocio";
+        }
+    }
+
+    public String corregirNegocio(Long id,NegocioDTO negocioDTO){
+        Negocio negociobd = negocioRepository.findById(id).orElse(null);
+        if(negociobd != null){
+            negociobd.setAprobado(false);
+            negociobd.setCorreccion(true);
+            negociobd.setMensaje_correccion(negocioDTO.getMensaje_correccion());
+            negocioRepository.save(negociobd);
             return "actualizado satisfactoriamente";
         }else{
             return "no se encontro negocio";
@@ -59,10 +89,11 @@ public class NegocioService {
     
     
     //---------------funciones emprendedor-------------
-    public void agregarNegocio(NegocioDTO negocioDTO, Long id){
+    public Long agregarNegocio(NegocioDTO negocioDTO, Long id){
         Emprendedor emprendedor = emprendedorRepository.findById(id).orElse(null);
         negocioDTO.setEmprendedor(emprendedor);
-        negocioRepository.save(NegocioMapper.toEntinty(negocioDTO));
+
+        return negocioRepository.save(NegocioMapper.toEntinty(negocioDTO)).getId_negocio();
     }
     
     public List<NegocioDTO> cargarNegociosEmprendedor(Long id){
@@ -73,16 +104,35 @@ public class NegocioService {
         for(NegocioDTO negocio: negociosBd){
             negocio.setEmprendedor(null);
             negocio.getSolicitudes().clear();
+            negocio.getInversiones().clear();
             negocios.add(negocio);
         }
 
         return negocios;
     }
-    
-    public String actualizarNegocio(Long id, NegocioDTO negocioDTO){
+
+    public void actualizarNegocio(Long id, NegocioDTO negocioDTO){
         Negocio negocioBd = negocioRepository.findById(id).orElse(null);
         if(negocioBd != null){
-            negocioBd.setAprobado(negocioDTO.isAprobado());
+            negocioBd.setTitulo(negocioDTO.getTitulo());
+            negocioBd.setDescripcion(negocioDTO.getDescripcion());
+            negocioBd.setLugar(negocioDTO.getLugar());
+            negocioBd.setTipo_negocio(negocioDTO.getTipo_negocio());
+            negocioBd.setLogo(negocioDTO.getLogo());
+            negocioBd.setVideo(negocioDTO.getVideo());
+            negocioBd.setPlan(negocioDTO.getPlan());
+            negocioBd.setRut(negocioDTO.getRut());
+            negocioRepository.save(negocioBd);
+        }
+    }
+    
+    public String actualizarNegocio_Url(Long id, NegocioDTO negocioDTO){
+        Negocio negocioBd = negocioRepository.findById(id).orElse(null);
+        if(negocioBd != null){
+            negocioBd.setLogo(negocioDTO.getLogo());
+            negocioBd.setVideo(negocioDTO.getVideo());
+            negocioBd.setPlan(negocioDTO.getPlan());
+            negocioBd.setRut(negocioDTO.getRut());
             negocioRepository.save(negocioBd);
             return "actualizado satisfactoriamente";
         }else{
@@ -118,8 +168,20 @@ public class NegocioService {
         Negocio negocio = negocioRepository.findById(id).orElse(null);
         negocio.setFinalizado(true);
         negocio.getSolicitudes().clear();
+        negocio.getInversiones().clear();
         negocioRepository.save(negocio);
         return "exito";
+    }
+
+    public void agregar_montos(Long id, NegocioDTO negocioDTO){
+        Negocio negocioBd = negocioRepository.findById(id).orElse(null);
+        if(negocioBd != null){
+            negocioBd.setMonto_solicitado(negocioDTO.getMonto_solicitado());
+            negocioBd.setPorcentaje_ofrecido(negocioDTO.getPorcentaje_ofrecido());
+            negocioBd.setSubasta(negocioDTO.isSubasta());
+            negocioRepository.save(negocioBd);
+
+        }
     }
     
     
@@ -132,6 +194,7 @@ public class NegocioService {
             negocio.getEmprendedor().getNegocios().clear();
             negocio.getEmprendedor().getInversiones().clear();
             negocio.getSolicitudes().clear();
+            negocio.getInversiones().clear();
             negocios.add(NegocioMapper.toDTO(negocio));
         }
         return negocios;
@@ -141,6 +204,7 @@ public class NegocioService {
         Negocio negocioBd = negocioRepository.findById(id).orElse(null);
         negocioBd.setEmprendedor(null);
         negocioBd.getSolicitudes().clear();
+        negocioBd.getInversiones().clear();
         return NegocioMapper.toDTO(negocioBd);
     }
     
@@ -149,5 +213,18 @@ public class NegocioService {
     }
     
     //-------------funciones filtro---(PROXIMAMENTE)-------------
+
+    public List<NegocioDTO> searchNegocios(String info) {
+        List<Negocio> negociosBd = negocioRepository.findAllByAprobadoTrueAndFinalizadoFalseAndTituloContainingIgnoreCaseOrAprobadoTrueAndFinalizadoFalseAndDescripcionContainingIgnoreCase(info, info);
+        List<NegocioDTO> negocios = new ArrayList<>();
+        for(Negocio negocio: negociosBd){
+            negocio.getEmprendedor().getNegocios().clear();
+            negocio.getEmprendedor().getInversiones().clear();
+            negocio.getSolicitudes().clear();
+            negocio.getInversiones().clear();
+            negocios.add(NegocioMapper.toDTO(negocio));
+        }
+        return negocios;
+    }
 
 }

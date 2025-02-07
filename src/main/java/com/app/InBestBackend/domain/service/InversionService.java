@@ -1,9 +1,14 @@
 package com.app.InBestBackend.domain.service;
 
 import com.app.InBestBackend.domain.dto.InversionDTO;
+import com.app.InBestBackend.domain.dto.NegocioDTO;
 import com.app.InBestBackend.domain.mapper.InversionMapper;
+import com.app.InBestBackend.domain.mapper.InversionistaMapper;
+import com.app.InBestBackend.domain.mapper.NegocioMapper;
 import com.app.InBestBackend.persistence.entity.Inversion;
+import com.app.InBestBackend.persistence.entity.Inversionista;
 import com.app.InBestBackend.persistence.entity.Negocio;
+import com.app.InBestBackend.persistence.entity.Solicitud;
 import com.app.InBestBackend.persistence.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InversionService {
@@ -31,9 +37,12 @@ public class InversionService {
         inversion.setNegocio(negocioRepository.findById(id_N).orElse(null));
         inversion.setInversionista(inversionistaRepository.findById(id_I).orElse(null));
         inversion.setEmprendedor(emprendedorRepository.findById(id_E).orElse(null));
-        inversion.setSolicitud(solicitudRepository.findById(id_S).orElse(null));
+        Solicitud solicitud = solicitudRepository.findById(id_S).orElse(null);
+        solicitud.setAceptada(true);
+        inversion.setSolicitud(solicitud);
 
         inversionRepository.save(inversion);
+        solicitudRepository.save(solicitud);
     }
 
     public InversionDTO buscarInversion(Long id){
@@ -59,5 +68,19 @@ public class InversionService {
             inversiones.add(InversionMapper.toDTO(inversion));
         }
         return inversiones;
+    }
+
+    public List<NegocioDTO> cargarInversiones(Long id){
+        Inversionista inversionistaBd = inversionistaRepository.findById(id).orElse(null);
+        List<Inversion> inversionesBd = inversionRepository.findAllByInversionista(inversionistaBd);
+        List<NegocioDTO> negociosInvertidos = new ArrayList<>();
+        for(Inversion inversion : inversionesBd){
+            NegocioDTO negocioDTO = NegocioMapper.toDTO(inversion.getSolicitud().getNegocio());
+            negocioDTO.getInversiones().clear();
+            negocioDTO.setEmprendedor(null);
+            negocioDTO.getSolicitudes().clear();
+            negociosInvertidos.add(negocioDTO);
+        }
+        return negociosInvertidos;
     }
 }

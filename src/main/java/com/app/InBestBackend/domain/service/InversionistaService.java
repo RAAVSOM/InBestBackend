@@ -5,6 +5,7 @@ import com.app.InBestBackend.domain.mapper.InversionistaMapper;
 import com.app.InBestBackend.persistence.entity.Inversionista;
 import com.app.InBestBackend.persistence.entity.Usuario;
 import com.app.InBestBackend.persistence.repository.InversionistaRepository;
+import com.app.InBestBackend.persistence.repository.SolicitudRepository;
 import com.app.InBestBackend.persistence.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ public class InversionistaService {
     private InversionistaRepository inversionistaRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private SolicitudRepository solicitudRepository;
 
     public InversionistaDTO save(InversionistaDTO inversionistaDTO){
         inversionistaRepository.save(InversionistaMapper.toEntinty(inversionistaDTO));

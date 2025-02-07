@@ -11,5 +11,7 @@ import java.util.List;
 public interface NegocioRepository extends JpaRepository<Negocio, Long>{
     public List<Negocio> findAllByAprobadoAndFinalizado(boolean aprobado,boolean finalizado);
     public List<Negocio> findAllByAprobado(boolean aprobado);
+    public List<Negocio> findAllByAprobadoAndCorreccion(boolean aprobado, boolean correccion);
     public List<Negocio> findAllByEmprendedor(Emprendedor emprendedor);
+    public List<Negocio> findAllByAprobadoTrueAndFinalizadoFalseAndTituloContainingIgnoreCaseOrAprobadoTrueAndFinalizadoFalseAndDescripcionContainingIgnoreCase(String titulo, String descripcion);
 }

@@ -23,6 +23,7 @@ public class UsuarioController {
             return usuarioEncontrado;
         }else{
             UsuarioDTO usuarioMal = new UsuarioDTO();
+            usuarioMal.setId_usuario(0L);
             usuarioMal.setTipo_usuario("");
             usuarioMal.setUsuario("");
             usuarioMal.setClave("");

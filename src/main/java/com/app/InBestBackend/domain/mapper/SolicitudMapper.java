@@ -6,6 +6,7 @@ import com.app.InBestBackend.persistence.entity.Solicitud;
 public class SolicitudMapper {
     public static Solicitud toEntinty(SolicitudDTO solicitudDTO){
         Solicitud solicitud = new Solicitud();
+        solicitud.setAceptada(solicitudDTO.isAceptada());
         solicitud.setNegocio(solicitudDTO.getNegocio());
         solicitud.setInversionista(solicitudDTO.getInversionista());
         solicitud.setNivel_riezgotolerado(solicitudDTO.getNivel_riezgotolerado());
@@ -18,6 +19,7 @@ public class SolicitudMapper {
 
     public static SolicitudDTO toDTO(Solicitud solicitud){
         SolicitudDTO solicitudDTO = new SolicitudDTO();
+        solicitudDTO.setAceptada(solicitud.isAceptada());
         solicitudDTO.setNegocio(solicitud.getNegocio());
         solicitudDTO.setInversionista(solicitud.getInversionista());
         solicitudDTO.setNivel_riezgotolerado(solicitud.getNivel_riezgotolerado());

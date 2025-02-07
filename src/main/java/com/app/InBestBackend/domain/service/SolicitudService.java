@@ -36,6 +36,7 @@ public class SolicitudService {
         for (Solicitud solicitud : solicitudesBd){
             solicitud.setInversionista(null);
             solicitud.getNegocio().getSolicitudes().clear();
+            solicitud.getNegocio().getInversiones().clear();
             solicitud.getNegocio().setEmprendedor(null);
             solicitudes.add(SolicitudMapper.toDTO(solicitud));
         }
@@ -80,6 +81,7 @@ public class SolicitudService {
         Solicitud solicitudBd = solicitudRepository.findById(id).orElse(null);
         solicitudBd.setInversionista(null);
         solicitudBd.getNegocio().getSolicitudes().clear();
+        solicitudBd.getNegocio().getInversiones().clear();
         solicitudBd.getNegocio().setEmprendedor(null);
         return SolicitudMapper.toDTO(solicitudBd);
     }

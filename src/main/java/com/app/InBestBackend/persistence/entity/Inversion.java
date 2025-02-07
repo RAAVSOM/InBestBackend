@@ -18,8 +18,8 @@ public class Inversion {
     @JoinColumn(name="id_solicitud")
     private Solicitud solicitud;
     
-    @OneToOne
-    @JoinColumn(name="id_negocio")
+    @ManyToOne
+    @JoinColumn(name="fk_negocio")
     private Negocio negocio;
     
     @ManyToOne

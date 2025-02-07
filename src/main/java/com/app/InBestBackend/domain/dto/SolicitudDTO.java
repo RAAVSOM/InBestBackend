@@ -11,6 +11,7 @@ public class SolicitudDTO {
     private float porcentaje_rentabilidad;
     private float porcentaje_liquidez;
     private float nivel_riezgotolerado;
+    private boolean aceptada;
     private Inversionista inversionista;
     private Negocio negocio;
 }
